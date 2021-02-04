@@ -54,7 +54,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
         Movie movie = movies.get(position);
         Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
-
     }
 
     @Override
@@ -68,12 +67,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPOster);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onPosterClickListener != null) {
-                        onPosterClickListener.onPosterClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (onPosterClickListener != null) {
+                    onPosterClickListener.onPosterClick(getAdapterPosition());
                 }
             });
         }

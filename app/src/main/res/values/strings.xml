@@ -8,4 +8,9 @@
     <string name="item_main">Главная</string>
     <string name="item_favourite">Избраное</string>
     <string name="launch_trailer">Запустить трейлер</string>
+    <string name="name">Название:</string>
+    <string name="original_name">Оригинальное название</string>
+    <string name="rating">Рейтинг:</string>
+    <string name="date">Дата релиза:</string>
+    <string name="overview">Описани:</string>
 </resources>

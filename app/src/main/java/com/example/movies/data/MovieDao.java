@@ -1,6 +1,5 @@
 package com.example.movies.data;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -11,7 +10,6 @@ import java.util.List;
 
 @Dao
 public interface MovieDao {
-
     @Query("SELECT * FROM movies2")
     LiveData<List<Movie>> getAllMovies();
 
@@ -38,6 +36,4 @@ public interface MovieDao {
 
     @Delete
     void deleteFavouriteMovie(FavouriteMovie favouriteMovie);
-
-
 }

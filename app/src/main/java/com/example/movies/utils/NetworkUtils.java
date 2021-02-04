@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public class NetworkUtils {
     private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
     private static final String BASE_URL_VIDEOS = "https://api.themoviedb.org/3/movie/%s/videos";
@@ -33,13 +30,13 @@ public class NetworkUtils {
     private static final String PARAMS_LANGUAGE = "language";
     private static final String PARAMS_SORT_BY = "sort_by";
     private static final String PARAMS_PAGE = "page";
-    private static final String PARAMS_MIN_VOYE_COUNT="vote_count.gte";
+    private static final String PARAMS_MIN_VOYE_COUNT = "vote_count.gte";
 
     private static final String API_KEY = "0b8c6374b7229947ab2f764ffc203052";
     private static final String LANGUAGE_VALUE = "ru-RU";
     private static final String SORT_BY_POPULARITY = "popularity.desc";
     private static final String SORT_BY_TOP_RATED = "vote_average.desc";
-    private static final String MIN_VOTE_COUNT_VALUE="1000";
+    private static final String MIN_VOTE_COUNT_VALUE = "1000";
 
     public static final int POPULARITY = 0;
     public static final int TOP_RATED = 1;
@@ -72,10 +69,8 @@ public class NetworkUtils {
         JSONObject result = null;
         URL url = buildURlToVideos(idMovie);
         try {
-            result = new BuidJSONToVideo().execute(url).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            result = new BuildJSONToVideo().execute(url).get();
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
@@ -85,17 +80,14 @@ public class NetworkUtils {
         JSONObject result = null;
         URL url = buildURlToReviews(idMovie);
         try {
-            result = new BuidJSONToVideo().execute(url).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            result = new BuildJSONToVideo().execute(url).get();
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    private static class BuidJSONToVideo extends AsyncTask<URL, Void, JSONObject> {
-
+    private static class BuildJSONToVideo extends AsyncTask<URL, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(URL... urls) {
             StringBuilder builder = new StringBuilder();
@@ -116,9 +108,7 @@ public class NetworkUtils {
                     line = reader.readLine();
                 }
                 result = new JSONObject(builder.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             } finally {
                 connection.disconnect();
@@ -138,7 +128,7 @@ public class NetworkUtils {
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
                 .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
                 .appendQueryParameter(PARAMS_SORT_BY, methodOfSort)
-                .appendQueryParameter(PARAMS_MIN_VOYE_COUNT,MIN_VOTE_COUNT_VALUE)
+                .appendQueryParameter(PARAMS_MIN_VOYE_COUNT, MIN_VOTE_COUNT_VALUE)
                 .appendQueryParameter(PARAMS_PAGE, Integer.toString(page))
                 .build();
 
@@ -155,19 +145,17 @@ public class NetworkUtils {
         URL url = buildURL(sortBy, page);
         try {
             result = new JSONLoadTask().execute(url).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    public static class JSONLoader extends AsyncTaskLoader<JSONObject>{
+    public static class JSONLoader extends AsyncTaskLoader<JSONObject> {
         private Bundle bundle;
         private OnStartLoadingListener onStartLoadingListener;
 
-        public interface OnStartLoadingListener{
+        public interface OnStartLoadingListener {
             void onStartLoading();
         }
 
@@ -177,13 +165,13 @@ public class NetworkUtils {
 
         public JSONLoader(@NonNull Context context, Bundle bundle) {
             super(context);
-            this.bundle=bundle;
+            this.bundle = bundle;
         }
 
         @Override
         protected void onStartLoading() {
             super.onStartLoading();
-            if (onStartLoadingListener!=null){
+            if (onStartLoadingListener != null) {
                 onStartLoadingListener.onStartLoading();
             }
             forceLoad();
@@ -192,16 +180,16 @@ public class NetworkUtils {
         @Nullable
         @Override
         public JSONObject loadInBackground() {
-            if (bundle==null) return null;
-            String urlAsString=bundle.getString("url");
-            URL url= null;
+            if (bundle == null) return null;
+            String urlAsString = bundle.getString("url");
+            URL url = null;
             try {
                 url = new URL(urlAsString);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
             JSONObject result = null;
-            if (url == null ) {
+            if (url == null) {
                 return result;
             }
             HttpURLConnection connection = null;
@@ -218,9 +206,7 @@ public class NetworkUtils {
                     line = reader.readLine();
                 }
                 result = new JSONObject(stringBuilder.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             } finally {
                 if (connection != null) {
@@ -253,9 +239,7 @@ public class NetworkUtils {
                     line = reader.readLine();
                 }
                 result = new JSONObject(stringBuilder.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             } finally {
                 if (connection != null) {
