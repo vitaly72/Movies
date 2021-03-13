@@ -6,7 +6,7 @@
     <data>
         <variable
             name="movie"
-            type="com.example.movies.data.Movie" />
+            type="com.example.movies.data.models.Movie" />
     </data>
 
     <ScrollView
@@ -165,6 +165,7 @@
                 android:orientation="horizontal"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintTop_toBottomOf="@+id/textViewOverview">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -173,9 +174,6 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible" />
             </LinearLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
 </layout>

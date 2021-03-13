@@ -88,7 +88,7 @@
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/favourite_add_to"
+            app:srcCompat="@drawable/ic_baseline_star_rate_yellow_24"
             android:focusable="true" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
