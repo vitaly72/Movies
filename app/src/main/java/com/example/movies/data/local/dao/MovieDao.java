@@ -1,10 +1,13 @@
-package com.example.movies.data;
+package com.example.movies.data.local.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.movies.domain.models.FavouriteMovie;
+import com.example.movies.domain.models.Movie;
 
 import java.util.List;
 

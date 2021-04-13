@@ -1,7 +1,7 @@
-package com.example.movies.api;
+package com.example.movies.data.remote;
 
-import com.example.movies.data.models.MovieResponse;
-import com.example.movies.data.models.VideoList;
+import com.example.movies.domain.models.MovieResponse;
+import com.example.movies.domain.models.VideoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,7 +17,7 @@ public interface IMovieApi {
                               @Query("page") String page);
 
     @GET("movie/{id}/videos")
-    Call<VideoList> video(@Path("id") int idMovie,
-                          @Query("api_key") String apiKey,
-                          @Query("language") String language);
+    Call<VideoResponse> video(@Path("id") int idMovie,
+                              @Query("api_key") String apiKey,
+                              @Query("language") String language);
 }

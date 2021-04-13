@@ -6,13 +6,13 @@
     <data>
         <variable
             name="movie"
-            type="com.example.movies.data.models.Movie" />
+            type="com.example.movies.domain.Movie" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DetailActivity">
+        tools:context=".presentation.details.DetailActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -27,7 +27,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/ic_launcher_foreground" />
+                tools:srcCompat="@drawable/ic_launcher_foreground"
+                android:contentDescription="@string/poster_of_movie" />
 
             <TextView
                 android:id="@+id/textViewBigPoster"

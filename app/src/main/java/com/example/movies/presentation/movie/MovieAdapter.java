@@ -1,5 +1,6 @@
-package com.example.movies.adapters;
+package com.example.movies.presentation.movie;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,38 +10,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movies.R;
-import com.example.movies.data.Movie;
+import com.example.movies.domain.Movie;
+import com.example.movies.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
-    private List<Movie> movies;
     private OnPosterClickListener onPosterClickListener;
-    private OnReachEndListener onReachEndListener;
+    Context context;
+    List<Movie> movies;
+
+    public MovieAdapter(Context context, List<Movie> movieList) {
+        this.context = context;
+        this.movies = movieList;
+    }
 
     public MovieAdapter() {
-        this.movies = new ArrayList<>();
+        movies = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.movie_item, parent, false);
         return new MovieViewHolder(view);
     }
 
     public interface OnPosterClickListener {
         void onPosterClick(int position);
-    }
-
-    public interface OnReachEndListener {
-        void onReachEnd();
-    }
-
-    public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
-        this.onReachEndListener = onReachEndListener;
     }
 
     public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
@@ -49,20 +49,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        if (movies.size() >= 20 && position == movies.size() - 4 && onReachEndListener != null) {
-            onReachEndListener.onReachEnd();
-        }
-        Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
+        String url = Constants.BASE.POSTER_URL + Constants.POSTER_SIZE.SMALL
+                + movies.get(position).getPosterPath();
+//        System.out.println("getPosterPath() = " + url);
+        Picasso.get().load(url).into(holder.imageViewSmallPoster);
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return movies == null ? 0 : movies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageViewSmallPoster;
+    public class MovieViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView imageViewSmallPoster;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,7 +88,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
-    public void clear(){
+    public void clear() {
         this.movies.clear();
         notifyDataSetChanged();
     }

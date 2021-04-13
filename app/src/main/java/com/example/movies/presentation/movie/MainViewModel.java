@@ -1,4 +1,4 @@
-package com.example.movies.data;
+package com.example.movies.presentation.movie;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -7,11 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.movies.data.local.MovieDatabase;
+import com.example.movies.domain.models.FavouriteMovie;
+import com.example.movies.domain.models.Movie;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainViewModel extends AndroidViewModel {
-
     private static MovieDatabase database;
     private final LiveData<List<Movie>> movies;
     private final LiveData<List<FavouriteMovie>> favouriteMovies;
@@ -40,7 +43,6 @@ public class MainViewModel extends AndroidViewModel {
         }
         return null;
     }
-
 
     public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
         return favouriteMovies;

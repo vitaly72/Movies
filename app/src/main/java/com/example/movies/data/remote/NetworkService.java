@@ -1,11 +1,12 @@
-package com.example.movies.api;
+package com.example.movies.data.remote;
+
+import com.example.movies.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.example.movies.utils.ApiConst.BASE_URL;
 
 public class NetworkService {
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -13,8 +14,9 @@ public class NetworkService {
             .build();
 
     private static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Constants.BASE.URL)
             .addConverterFactory(GsonConverterFactory.create())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(okHttpClient)
             .build();
 

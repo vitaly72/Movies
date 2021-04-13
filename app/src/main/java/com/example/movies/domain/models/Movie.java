@@ -1,4 +1,4 @@
-package com.example.movies.data;
+package com.example.movies.domain.models;
 
 import androidx.databinding.BaseObservable;
 import androidx.room.Entity;

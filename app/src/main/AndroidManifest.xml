@@ -11,9 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".FavoriteActivity" />
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".presentation.movie.FavoriteActivity" />
+        <activity android:name=".presentation.details.DetailActivity" />
+        <activity android:name=".presentation.movie.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
