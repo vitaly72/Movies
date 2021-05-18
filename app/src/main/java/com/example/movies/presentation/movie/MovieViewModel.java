@@ -13,9 +13,9 @@ public class MovieViewModel extends ViewModel {
     private MutableLiveData<MovieResponse> movieData;
     private MutableLiveData<VideoResponse> videoData;
 
-    public void initMovie() {
+    public void initMovie(boolean sortByPopular) {
         if (movieData != null) return;
-        movieData = MovieRepository.getInstance().getMovies();
+        movieData = MovieRepository.getInstance().getMovies(sortByPopular);
     }
 
     public void initVideo(int id) {

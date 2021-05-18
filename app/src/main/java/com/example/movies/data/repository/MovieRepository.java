@@ -29,15 +29,15 @@ public final class MovieRepository implements IMovieRepository {
         return instance;
     }
 
-    public MutableLiveData<MovieResponse> getMovies() {
+    public MutableLiveData<MovieResponse> getMovies(boolean sortByPopular) {
         MutableLiveData<MovieResponse> movieData = new MutableLiveData<>();
 
         NetworkService.createService()
                 .movie(Constants.PARAMS.VALUE.API_KEY,
                         Constants.PARAMS.VALUE.LANGUAGE_VALUE,
-                        Constants.PARAMS.VALUE.SORT_BY_POPULARITY,
+                        sortByPopular ? Constants.PARAMS.VALUE.SORT_BY_POPULARITY : Constants.PARAMS.VALUE.SORT_BY_TOP_RATED,
                         Constants.PARAMS.VALUE.MIN_VOTE_COUNT_VALUE,
-                        Integer.toString(10))
+                        Integer.toString(50))
                 .enqueue(new Callback<MovieResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<MovieResponse> call,

@@ -1,61 +1,51 @@
 package com.example.movies.presentation.movie;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.fragment.app.Fragment;
 
+import com.example.movies.FavoriteMovieFragment;
+import com.example.movies.PopularMovieFragment;
 import com.example.movies.R;
+import com.example.movies.RatingMovieFragment;
 import com.example.movies.databinding.ActivityMainBinding;
-import com.example.movies.domain.Movie;
-import com.example.movies.presentation.details.DetailActivity;
-import com.example.movies.utils.JSONUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.OnPosterClickListener {
-    private MovieAdapter movieAdapter;
-    private ActivityMainBinding mainBinding;
-    private MovieViewModel movieViewModel;
-    private List<Movie> movies;
-
+public class MainActivity extends AppCompatActivity implements
+        BottomNavigationView.OnNavigationItemSelectedListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        movieAdapter = new MovieAdapter();
-        mainBinding.recyclerViewMain.setLayoutManager(
-                new GridLayoutManager(this, getColumnCount()));
-        mainBinding.recyclerViewMain.setAdapter(movieAdapter);
-
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.initMovie();
-        movieViewModel.getMovieData().observe(this, movieResponse -> {
-            movies = movieResponse.getMovieList();
-            movieAdapter.setMovies(movies);
-        });
-
-        movieAdapter.setOnPosterClickListener(this);
+        ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mainBinding.navigationView.setOnNavigationItemSelectedListener(this);
     }
 
-    private int getColumnCount() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-        return Math.max(width / 260, 2);
-    }
-
+    @SuppressLint("NonConstantResourceId")
     @Override
-    public void onPosterClick(int position) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        Movie movie = movieAdapter.getMovies().get(position);
-        String movieJsonString = JSONUtils.getGsonParser().toJson(movie);
-        intent.putExtra("id", movieJsonString);
-        startActivity(intent);
+    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
+        Fragment selectedFragment = null;
+        switch (item.getItemId()) {
+            case R.id.popular:
+                selectedFragment = new PopularMovieFragment();
+                break;
+            case R.id.rating:
+                selectedFragment = new RatingMovieFragment();
+                break;
+            case R.id.favorite:
+                selectedFragment = new FavoriteMovieFragment();
+                break;
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit();
+        return true;
     }
 }
