@@ -6,7 +6,7 @@
     <data>
         <variable
             name="movie"
-            type="com.example.movies.domain.Movie" />
+            type="com.example.movies.domain.models.Movie" />
     </data>
 
     <ScrollView

@@ -18,18 +18,19 @@ public final class VideoRepository implements IVideoRepository {
     private static VideoRepository instance;
     private IMovieApi movieApi;
 
-    private VideoRepository(IMovieApi movieApi) {
-        this.movieApi = movieApi;
+    private VideoRepository() {
     }
 
     public static VideoRepository getInstance() {
-        if (instance == null) instance = new VideoRepository(instance.movieApi);
+        if (instance == null) instance = new VideoRepository();
         return instance;
     }
 
     public MutableLiveData<VideoResponse> getVideo(int idMovie) {
         MutableLiveData<VideoResponse> videoData = new MutableLiveData<>();
-        movieApi.video(idMovie,
+
+        NetworkService.createService()
+                .video(idMovie,
                 Constants.PARAMS.VALUE.API_KEY,
                 Constants.PARAMS.VALUE.LANGUAGE_VALUE)
                 .enqueue(new Callback<VideoResponse>() {

@@ -7,10 +7,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.movies.data.local.dao.MovieDao;
-import com.example.movies.domain.models.FavouriteMovie;
 import com.example.movies.domain.models.Movie;
 
-@Database(entities = {Movie.class, FavouriteMovie.class}, version = 3, exportSchema = false)
+@Database(entities = {Movie.class}, version = 4, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     private static final String DB_NAME = "movies.db";
     private static MovieDatabase database;

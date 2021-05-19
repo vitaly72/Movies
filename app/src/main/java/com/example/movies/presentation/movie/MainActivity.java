@@ -9,10 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.movies.FavoriteMovieFragment;
-import com.example.movies.PopularMovieFragment;
 import com.example.movies.R;
-import com.example.movies.RatingMovieFragment;
 import com.example.movies.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,6 +22,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mainBinding.navigationView.setOnNavigationItemSelectedListener(this);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new PopularMovieFragment())
+                .commit();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
                 selectedFragment = new FavoriteMovieFragment();
                 break;
         }
+        assert selectedFragment != null;
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, selectedFragment)

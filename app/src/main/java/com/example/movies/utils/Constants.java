@@ -6,7 +6,7 @@ public final class Constants {
         public static final String URL_VIDEOS = "https://api.themoviedb.org/3/";
         public static final String URL_REVIEWS = "https://api.themoviedb.org/3/movie/%s/reviews";
         public static final String POSTER_URL = "https://image.tmdb.org/t/p/";
-        private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+        public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     }
 
     public static final class PARAMS {

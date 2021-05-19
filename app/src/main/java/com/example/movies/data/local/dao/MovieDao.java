@@ -6,37 +6,36 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.movies.domain.models.FavouriteMovie;
 import com.example.movies.domain.models.Movie;
 
 import java.util.List;
 
 @Dao
 public interface MovieDao {
-    @Query("SELECT * FROM movies2")
-    LiveData<List<Movie>> getAllMovies();
-
     @Query("SELECT * FROM favourite_movies")
-    LiveData<List<FavouriteMovie>> getAllFavouriteMovies();
-
-    @Query("SELECT * FROM movies2 WHERE id == :movieId")
-    Movie getMovieById(int movieId);
+    LiveData<List<Movie>> getAllFavouriteMovies();
 
     @Query("SELECT * FROM favourite_movies WHERE id == :movieId")
-    FavouriteMovie getFavouriteMovieById(int movieId);
-
-    @Query("DELETE FROM movies2")
-    void deleteAllMovies();
+    Movie getFavouriteMovieById(int movieId);
 
     @Insert
-    void insertMovie(Movie movie);
+    void insertFavouriteMovie(Movie favouriteMovie);
 
     @Delete
-    void deleteMovie(Movie movie);
+    void deleteFavouriteMovie(Movie favouriteMovie);
 
-    @Insert
-    void insertFavouriteMovie(FavouriteMovie favouriteMovie);
+//    @Query("SELECT * FROM movies2")
 
-    @Delete
-    void deleteFavouriteMovie(FavouriteMovie favouriteMovie);
+//    LiveData<List<Movie>> getAllMovies();
+//    @Query("SELECT * FROM movies2 WHERE id == :movieId")
+
+//    Movie getMovieById(int movieId);
+//    @Query("DELETE FROM movies2")
+//    void deleteAllMovies();
+//
+//    @Insert
+//    void insertMovie(Movie movie);
+//
+//    @Delete
+//    void deleteMovie(Movie movie);
 }

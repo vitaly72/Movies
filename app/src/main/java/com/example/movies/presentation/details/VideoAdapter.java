@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movies.R;
 import com.example.movies.domain.models.Video;
+import com.example.movies.utils.Constants;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -59,9 +60,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.TrailerViewH
             nameTrailer = itemView.findViewById(R.id.textViewOfVideo);
             itemView.setOnClickListener(v -> {
                 if (onVideoClickListener != null) {
-                    System.out.println(".getKey() = " + videos.get(getAdapterPosition()).getKey());
-                    onVideoClickListener.clickOnVideo(videos.get(getAdapterPosition()).getKey());
-                    Snackbar.make(itemView, "Youtube Trailer", Snackbar.LENGTH_SHORT).show();
+                    System.out.println("url() = " + videos.get(getAbsoluteAdapterPosition()).getKey());
+                    onVideoClickListener.clickOnVideo(Constants.BASE.YOUTUBE_URL + videos.get(getAbsoluteAdapterPosition()).getKey());
                 }
             });
         }

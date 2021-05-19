@@ -2,6 +2,7 @@ package com.example.movies.presentation.details;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,24 +12,19 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.movies.R;
-import com.example.movies.presentation.details.VideoAdapter;
-import com.example.movies.domain.models.FavouriteMovie;
-import com.example.movies.presentation.movie.MainViewModel;
-import com.example.movies.domain.Movie;
-import com.example.movies.domain.models.Video;
 import com.example.movies.databinding.ActivityDetailBinding;
+import com.example.movies.domain.models.Movie;
+import com.example.movies.presentation.movie.FavoriteMoviesViewModel;
+import com.example.movies.presentation.movie.MovieViewModel;
 import com.example.movies.utils.Constants;
 import com.example.movies.utils.JSONUtils;
-import com.example.movies.presentation.movie.MovieViewModel;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
-    private int id;
-    private MainViewModel mainViewModel;
-    private MovieViewModel movieViewModel;
     private Movie movie;
-    private FavouriteMovie favouriteMovie;
     private ActivityDetailBinding detailBinding;
+    private FavoriteMoviesViewModel favoriteMoviesViewModel;
+    private boolean isFavoriteMovie = false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -44,48 +40,41 @@ public class DetailActivity extends AppCompatActivity {
         detailBinding.recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         detailBinding.recyclerViewTrailers.setAdapter(videoAdapter);
 
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        favoriteMoviesViewModel = ViewModelProviders.of(this).get(FavoriteMoviesViewModel.class);
+        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         movieViewModel.initVideo(movie.getId());
-        movieViewModel.getVideoData().observe(this, videoResponse -> {
-            videoAdapter.setVideos(videoResponse.getVideoList());
-            for (Video item: videoAdapter.getVideos()) {
-//            for (Video item: videoResponse.getVideoList()) {
-                System.out.println("item.getName() = " + item.getName());
-            }
-        });
-
-//        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-//        movie = mainViewModel.getMovieByID(id);
+        movieViewModel.getVideoData().observe(this, videoResponse ->
+                videoAdapter.setVideos(videoResponse.getVideoList()));
 
         String urlImage = Constants.BASE.POSTER_URL + Constants.POSTER_SIZE.BIG + movie.getPosterPath();
-        System.out.println("urlImage = " + urlImage);
         Picasso.get().load(urlImage).into(detailBinding.imageViewBigPoster);
         detailBinding.setMovie(movie);
+        setFavourite();
 
-//        setFavourite();
-//        videoAdapter.setTrailers();
-//        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId());
-//        ArrayList<Video> trailers = JSONUtils.getTrailersFromJSON(jsonObjectTrailers);
         videoAdapter.setOnVideoClickListener(url -> {
-//            Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//            startActivity(intentToTrailer);
+            Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intentToTrailer);
         });
     }
 
     public void onClickChangeFavourite(View view) {
-//        if (favouriteMovie == null) {
-//            mainViewModel.insertFavouriteMovie(new FavouriteMovie(movie));
-//        } else {
-//            mainViewModel.deleteFavouriteMovie(favouriteMovie);
-//        }
-//        setFavourite();
+        System.out.println("DetailActivity.onClickChangeFavourite " + isFavoriteMovie);
+        if (isFavoriteMovie) {
+            favoriteMoviesViewModel.deleteFavouriteMovie(movie);
+        } else {
+            favoriteMoviesViewModel.insertFavouriteMovie(movie);
+        }
+        setFavourite();
     }
 
     private void setFavourite() {
-        favouriteMovie = mainViewModel.getFavouriteMovieByID(id);
+        System.out.println("DetailActivity.setFavourite");
+        Movie favouriteMovie = favoriteMoviesViewModel.getFavouriteMovieByID(movie.getId());
         if (favouriteMovie == null) {
+            isFavoriteMovie = false;
             detailBinding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_gray_24);
         } else {
+            isFavoriteMovie = true;
             detailBinding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_yellow_24);
         }
     }

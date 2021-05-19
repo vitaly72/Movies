@@ -8,11 +8,11 @@
     <string name="item_main">Главная</string>
     <string name="item_favourite">Избраное</string>
     <string name="launch_trailer">Запустить трейлер</string>
-    <string name="name">Название:</string>
-    <string name="original_name">Оригинальное название</string>
+    <string name="name">Назва:</string>
+    <string name="original_name">Оригінальна назва</string>
     <string name="rating">Рейтинг:</string>
-    <string name="date">Дата релиза:</string>
-    <string name="overview">Описани:</string>
+    <string name="date">Дата релізу:</string>
+    <string name="overview">Опис:</string>
     <string name="menu_1">Popular</string>
     <string name="menu_2">Rating</string>
     <string name="menu_3">Favorite</string>

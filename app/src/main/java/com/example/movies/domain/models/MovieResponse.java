@@ -1,6 +1,5 @@
 package com.example.movies.domain.models;
 
-import com.example.movies.domain.Movie;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

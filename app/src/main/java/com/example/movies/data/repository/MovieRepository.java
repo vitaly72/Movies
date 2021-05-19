@@ -1,17 +1,13 @@
 package com.example.movies.data.repository;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.movies.data.remote.NetworkService;
-import com.example.movies.domain.models.Movie;
 import com.example.movies.domain.models.MovieResponse;
 import com.example.movies.domain.repository.IMovieRepository;
 import com.example.movies.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +15,6 @@ import retrofit2.Response;
 
 public final class MovieRepository implements IMovieRepository {
     private static MovieRepository instance;
-    private LiveData<List<Movie>> movieList;
 
     private MovieRepository() {
     }
@@ -29,7 +24,7 @@ public final class MovieRepository implements IMovieRepository {
         return instance;
     }
 
-    public MutableLiveData<MovieResponse> getMovies(boolean sortByPopular) {
+    public MutableLiveData<MovieResponse> getMovies(boolean sortByPopular, int page) {
         MutableLiveData<MovieResponse> movieData = new MutableLiveData<>();
 
         NetworkService.createService()
@@ -37,7 +32,7 @@ public final class MovieRepository implements IMovieRepository {
                         Constants.PARAMS.VALUE.LANGUAGE_VALUE,
                         sortByPopular ? Constants.PARAMS.VALUE.SORT_BY_POPULARITY : Constants.PARAMS.VALUE.SORT_BY_TOP_RATED,
                         Constants.PARAMS.VALUE.MIN_VOTE_COUNT_VALUE,
-                        Integer.toString(50))
+                        Integer.toString(page))
                 .enqueue(new Callback<MovieResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<MovieResponse> call,
@@ -52,9 +47,5 @@ public final class MovieRepository implements IMovieRepository {
                     }
                 });
         return movieData;
-    }
-
-    public LiveData<List<Movie>> getMovieList() {
-        return movieList;
     }
 }
