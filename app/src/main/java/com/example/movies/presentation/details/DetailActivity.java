@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.movies.R;
 import com.example.movies.databinding.ActivityDetailBinding;
 import com.example.movies.domain.models.Movie;
-import com.example.movies.presentation.movie.FavoriteMoviesViewModel;
-import com.example.movies.presentation.movie.MovieViewModel;
+import com.example.movies.presentation.movie.favorite.FavoriteMoviesViewModel;
 import com.example.movies.utils.Constants;
 import com.example.movies.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class DetailActivity extends AppCompatActivity {
     private Movie movie;
     private ActivityDetailBinding detailBinding;
@@ -32,19 +34,19 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         detailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("id")) {
-            String movieJsonString = intent.getStringExtra("id");
-            movie = JSONUtils.getGsonParser().fromJson(movieJsonString, Movie.class);
-        } else finish();
+        movie = getMovieFromGson(intent);
+
         VideoAdapter videoAdapter = new VideoAdapter();
         detailBinding.recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         detailBinding.recyclerViewTrailers.setAdapter(videoAdapter);
 
         favoriteMoviesViewModel = ViewModelProviders.of(this).get(FavoriteMoviesViewModel.class);
-        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.initVideo(movie.getId());
-        movieViewModel.getVideoData().observe(this, videoResponse ->
-                videoAdapter.setVideos(videoResponse.getVideoList()));
+
+        VideoViewModel viewModel = ViewModelProviders.of(this).get(VideoViewModel.class);
+        viewModel.initVideo(movie.getId());
+        viewModel.getVideoData().observe(this, videoResponse ->
+                videoAdapter.setVideos(videoResponse.getVideoList())
+        );
 
         String urlImage = Constants.BASE.POSTER_URL + Constants.POSTER_SIZE.BIG + movie.getPosterPath();
         Picasso.get().load(urlImage).into(detailBinding.imageViewBigPoster);
@@ -57,8 +59,13 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    public Movie getMovieFromGson(Intent intent) {
+        String movieJsonString = intent.getStringExtra("id");
+
+        return JSONUtils.getGsonParser().fromJson(movieJsonString, Movie.class);
+    }
+
     public void onClickChangeFavourite(View view) {
-        System.out.println("DetailActivity.onClickChangeFavourite " + isFavoriteMovie);
         if (isFavoriteMovie) {
             favoriteMoviesViewModel.deleteFavouriteMovie(movie);
         } else {
@@ -68,7 +75,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setFavourite() {
-        System.out.println("DetailActivity.setFavourite");
         Movie favouriteMovie = favoriteMoviesViewModel.getFavouriteMovieByID(movie.getId());
         if (favouriteMovie == null) {
             isFavoriteMovie = false;

@@ -13,26 +13,29 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.movies.R;
+import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentPopularMovieBinding;
 import com.example.movies.domain.models.Movie;
 import com.example.movies.presentation.details.DetailActivity;
-import com.example.movies.presentation.movie.EndlessRecyclerOnScrollListener;
-import com.example.movies.presentation.movie.MovieAdapter;
-import com.example.movies.presentation.movie.MovieViewModel;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.WithFragmentBindings;
+
+@WithFragmentBindings
+@AndroidEntryPoint
 public class PopularMovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private List<Movie> movies;
     private int page = 1;
     private MovieViewModel movieViewModel;
-    private boolean mIsLoading, mIsLastPage;
-
-    final int pageSize = 20;
+    public MovieRepository movieRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,16 +54,11 @@ public class PopularMovieFragment extends Fragment {
         movieAdapter = new MovieAdapter();
         binding.movieList.textViewTitleList.setText("Популярні фільми");
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
-
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-//        movieViewModel.init();
-//        movieViewModel.moviePagedList.observe(getViewLifecycleOwner(), movies -> {
-//            System.out.println("movies.size() = " + movies.size());
-//            movieAdapter.submitList(movies);
-//        });
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
 
-        movieViewModel.initMovie(true, page);
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        movieViewModel.initMovie(movieRepository, true, page);
         movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
             movies = movieResponse.getMovieList();
             System.out.println("movies.size() = " + movies.size());
@@ -82,45 +80,14 @@ public class PopularMovieFragment extends Fragment {
         return view;
     }
 
-    private void loadNext(){
-        movieViewModel.initMovie(true, ++page);
+    private void loadNext() {
+        movieViewModel.initMovie(movieRepository, true, ++page);
         movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
             movies = movieResponse.getMovieList();
             System.out.println("movies.size() = " + movies.size());
             movieAdapter.addMovies(movies);
         });
     }
-
-//    private void loadMoreItems(boolean isFirstPage) {
-//        mIsLoading = true;
-//        page++;
-//
-//        // update recycler adapter with next page
-//        movieViewModel.initMovie(true, page);
-//        NetworkService.createService().movie(
-//                Constants.PARAMS.VALUE.API_KEY,
-//                Constants.PARAMS.VALUE.LANGUAGE_VALUE,
-//                Constants.PARAMS.VALUE.SORT_BY_POPULARITY,
-//                Constants.PARAMS.VALUE.MIN_VOTE_COUNT_VALUE,
-//                Integer.toString(page)
-//        ).enqueue(new Callback<PagedList<MovieResponse>>() {
-//            @Override
-//            public void onResponse(Call<PagedList<MovieResponse>> call, Response<PagedList<MovieResponse>> response) {
-//                PagedList<MovieResponse> result = response.body();
-//
-//                if (result == null) return;
-//                else if (!isFirstPage) movieAdapter.addMovies(result.getResults().get(0).getMovieList());
-//                else movieAdapter.setMovies(result.getResults().get(0).getMovieList());
-//
-//                mIsLoading = false;
-//            }
-//
-//            @Override
-//            public void onFailure(Call<PagedList<MovieResponse>> call, Throwable t) {
-//
-//            }
-//        });
-//    }
 
     public void onPosterClick(int position) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);

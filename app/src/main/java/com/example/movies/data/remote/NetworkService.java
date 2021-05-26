@@ -16,7 +16,6 @@ public class NetworkService {
     private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE.URL)
             .addConverterFactory(GsonConverterFactory.create())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(okHttpClient)
             .build();
 

@@ -13,23 +13,27 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.movies.R;
+import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentRatingMovieBinding;
 import com.example.movies.domain.models.Movie;
 import com.example.movies.presentation.details.DetailActivity;
-import com.example.movies.presentation.movie.EndlessRecyclerOnScrollListener;
-import com.example.movies.presentation.movie.MovieAdapter;
-import com.example.movies.presentation.movie.MovieViewModel;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.WithFragmentBindings;
+
+@WithFragmentBindings
+@AndroidEntryPoint
 public class RatingMovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private MovieViewModel movieViewModel;
     private int page = 1;
     private List<Movie> movies;
+    public MovieRepository movieRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class RatingMovieFragment extends Fragment {
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
 
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.initMovie(false, 1);
+        movieViewModel.initMovie(movieRepository, false, 1);
         movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
             movies = movieResponse.getMovieList();
             System.out.println("movies.size() = " + movies.size());
@@ -75,7 +79,7 @@ public class RatingMovieFragment extends Fragment {
     }
 
     private void loadNext() {
-        movieViewModel.initMovie(false, ++page);
+        movieViewModel.initMovie(movieRepository, false, ++page);
         movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
             movies = movieResponse.getMovieList();
             System.out.println("movies.size() = " + movies.size());

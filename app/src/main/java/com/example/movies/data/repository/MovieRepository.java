@@ -2,33 +2,33 @@ package com.example.movies.data.repository;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.movies.data.remote.NetworkService;
+import com.example.movies.data.remote.IMovieApi;
 import com.example.movies.domain.models.MovieResponse;
 import com.example.movies.domain.repository.IMovieRepository;
 import com.example.movies.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Singleton
 public final class MovieRepository implements IMovieRepository {
-    private static MovieRepository instance;
+    private final IMovieApi movieApi;
 
-    private MovieRepository() {
-    }
-
-    public static MovieRepository getInstance() {
-        if (instance == null) instance = new MovieRepository();
-        return instance;
+    @Inject
+    public MovieRepository(IMovieApi movieApi) {
+        this.movieApi = movieApi;
     }
 
     public MutableLiveData<MovieResponse> getMovies(boolean sortByPopular, int page) {
         MutableLiveData<MovieResponse> movieData = new MutableLiveData<>();
 
-        NetworkService.createService()
-                .movie(Constants.PARAMS.VALUE.API_KEY,
+        movieApi.movie(Constants.PARAMS.VALUE.API_KEY,
                         Constants.PARAMS.VALUE.LANGUAGE_VALUE,
                         sortByPopular ? Constants.PARAMS.VALUE.SORT_BY_POPULARITY : Constants.PARAMS.VALUE.SORT_BY_TOP_RATED,
                         Constants.PARAMS.VALUE.MIN_VOTE_COUNT_VALUE,

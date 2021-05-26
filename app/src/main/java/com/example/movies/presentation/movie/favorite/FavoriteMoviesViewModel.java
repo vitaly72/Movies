@@ -1,4 +1,4 @@
-package com.example.movies.presentation.movie;
+package com.example.movies.presentation.movie.favorite;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -13,10 +13,14 @@ import com.example.movies.domain.models.Movie;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+//@HiltViewModel
 public class FavoriteMoviesViewModel extends AndroidViewModel {
     private static MovieDatabase database;
     private final LiveData<List<Movie>> favouriteMovies;
 
+    
     public FavoriteMoviesViewModel(@NonNull Application application) {
         super(application);
         database = MovieDatabase.getInstance(application);

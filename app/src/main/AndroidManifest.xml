@@ -10,8 +10,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:name=".presentation.app.MovieApplication"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".presentation.movie.FavoriteActivity" />
+        <activity android:name=".presentation.movie.favorite.FavoriteActivity" />
         <activity android:name=".presentation.details.DetailActivity" />
         <activity android:name=".presentation.movie.MainActivity">
             <intent-filter>

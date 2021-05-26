@@ -1,5 +1,6 @@
-package com.example.movies.presentation.movie;
+package com.example.movies.presentation.movie.favorite;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;

@@ -11,10 +11,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.movies.R;
 import com.example.movies.databinding.ActivityMainBinding;
+import com.example.movies.presentation.movie.favorite.FavoriteMovieFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener {
     @Override
