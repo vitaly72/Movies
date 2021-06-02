@@ -23,7 +23,7 @@ public class FavoriteMoviesViewModel extends AndroidViewModel {
     
     public FavoriteMoviesViewModel(@NonNull Application application) {
         super(application);
-        database = MovieDatabase.getInstance(application);
+//        database = MovieDatabase.getInstance(application);
         favouriteMovies = database.movieDao().getAllFavouriteMovies();
     }
 

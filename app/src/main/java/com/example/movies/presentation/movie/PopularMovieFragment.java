@@ -6,24 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.movies.R;
 import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentPopularMovieBinding;
 import com.example.movies.domain.models.Movie;
+import com.example.movies.domain.models.MovieQuery;
 import com.example.movies.presentation.details.DetailActivity;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.WithFragmentBindings;
@@ -34,37 +33,42 @@ public class PopularMovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private List<Movie> movies;
     private int page = 1;
-    private MovieViewModel movieViewModel;
+    private MovieQuery movieQuery;
+    private MovieViewModel viewModel;
     public MovieRepository movieRepository;
+    private FragmentPopularMovieBinding binding;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentPopularMovieBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_popular_movie,
-                container,
-                false);
-        View view = binding.getRoot();
+        binding = FragmentPopularMovieBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        movieAdapter = new MovieAdapter();
-        binding.movieList.textViewTitleList.setText("Популярні фільми");
-        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
-        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
+    @Override
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        initRecyclerView();
+        observeData();
+        addOnScrollListener();
+    }
 
-        movieViewModel.initMovie(movieRepository, true, page);
-        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-            movies = movieResponse.getMovieList();
-            System.out.println("movies.size() = " + movies.size());
-            movieAdapter.setMovies(movies);
-        });
+    private void loadNext() {
+        System.out.println("PopularMovieFragment.loadNext");
+//        movieViewModel.initMovie(movieRepository, true, ++page);
+//        movieViewModel.nextPage();
+//        movieViewModel.getMovieData(true, page).observe(getViewLifecycleOwner(), movieResponse -> {
+//            movies = movieResponse.getMovieList();
+//            System.out.println("movies.size() = " + movies.size());
+//            movieAdapter.addMovies(movies);
+//        });
+    }
 
+    public void addOnScrollListener() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) binding.movieList.recyclerViewMain.getLayoutManager();
         binding.movieList.recyclerViewMain.addOnScrollListener(
                 new EndlessRecyclerOnScrollListener(layoutManager) {
@@ -74,19 +78,6 @@ public class PopularMovieFragment extends Fragment {
                         loadNext();
                     }
                 });
-
-        movieAdapter.setOnPosterClickListener(this::onPosterClick);
-
-        return view;
-    }
-
-    private void loadNext() {
-        movieViewModel.initMovie(movieRepository, true, ++page);
-        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-            movies = movieResponse.getMovieList();
-            System.out.println("movies.size() = " + movies.size());
-            movieAdapter.addMovies(movies);
-        });
     }
 
     public void onPosterClick(int position) {
@@ -96,6 +87,20 @@ public class PopularMovieFragment extends Fragment {
         System.out.println("movieJsonString = " + movieJsonString);
         intent.putExtra("id", movieJsonString);
         startActivity(intent);
+    }
+
+    private void observeData() {
+        viewModel.getMovieList().observe(getViewLifecycleOwner(),
+                movies -> movieAdapter.setMovies(movies)
+        );
+    }
+
+    private void initRecyclerView() {
+        movieAdapter = new MovieAdapter();
+        binding.movieList.textViewTitleList.setText("Популярні фільми");
+        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
+        movieAdapter.setOnPosterClickListener(this::onPosterClick);
     }
 
     private int getColumnCount() {

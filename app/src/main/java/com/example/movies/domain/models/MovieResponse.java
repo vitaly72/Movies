@@ -3,6 +3,7 @@ package com.example.movies.domain.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieResponse {
@@ -11,7 +12,7 @@ public class MovieResponse {
     private int page;
     @SerializedName("results")
     @Expose
-    private List<Movie> movieList;
+    private ArrayList<Movie> movieList;
     @SerializedName("total_pages")
     @Expose
     private int totalPages;
@@ -19,11 +20,11 @@ public class MovieResponse {
     @Expose
     private int totalResults;
 
-    public List<Movie> getMovieList() {
+    public ArrayList<Movie> getMovieList() {
         return movieList;
     }
 
-    public void setMovieList(List<Movie> movieList) {
+    public void setMovieList(ArrayList<Movie> movieList) {
         this.movieList = movieList;
     }
 

@@ -33,7 +33,7 @@ public class RatingMovieFragment extends Fragment {
     private MovieViewModel movieViewModel;
     private int page = 1;
     private List<Movie> movies;
-    public MovieRepository movieRepository;
+//    public MovieRepository movieRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,13 +55,13 @@ public class RatingMovieFragment extends Fragment {
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
 
-        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.initMovie(movieRepository, false, 1);
-        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-            movies = movieResponse.getMovieList();
-            System.out.println("movies.size() = " + movies.size());
-            movieAdapter.setMovies(movies);
-        });
+//        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+//        movieViewModel.initMovie(movieRepository, false, 1);
+//        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
+//            movies = movieResponse.getMovieList();
+//            System.out.println("movies.size() = " + movies.size());
+//            movieAdapter.setMovies(movies);
+//        });
 
         LinearLayoutManager layoutManager = (LinearLayoutManager) binding.movieList.recyclerViewMain.getLayoutManager();
         binding.movieList.recyclerViewMain.addOnScrollListener(
@@ -79,12 +79,12 @@ public class RatingMovieFragment extends Fragment {
     }
 
     private void loadNext() {
-        movieViewModel.initMovie(movieRepository, false, ++page);
-        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-            movies = movieResponse.getMovieList();
-            System.out.println("movies.size() = " + movies.size());
-            movieAdapter.addMovies(movies);
-        });
+//        movieViewModel.initMovie(movieRepository, false, ++page);
+//        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
+//            movies = movieResponse.getMovieList();
+//            System.out.println("movies.size() = " + movies.size());
+//            movieAdapter.addMovies(movies);
+//        });
     }
 
     public void onPosterClick(int position) {
