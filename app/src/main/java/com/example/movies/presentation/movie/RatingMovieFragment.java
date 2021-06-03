@@ -6,22 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.movies.R;
 import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentRatingMovieBinding;
 import com.example.movies.domain.models.Movie;
+import com.example.movies.domain.models.MovieQuery;
 import com.example.movies.presentation.details.DetailActivity;
+import com.example.movies.utils.Constants;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.WithFragmentBindings;
@@ -30,61 +30,39 @@ import dagger.hilt.android.WithFragmentBindings;
 @AndroidEntryPoint
 public class RatingMovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
-    private MovieViewModel movieViewModel;
     private int page = 1;
-    private List<Movie> movies;
-//    public MovieRepository movieRepository;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public MovieRepository movieRepository;
+    private FragmentRatingMovieBinding binding;
+    private MovieViewModel viewModel;
+    private MovieQuery movieQuery;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentRatingMovieBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_rating_movie,
-                container,
-                false);
-        View view = binding.getRoot();
-        binding.movieList.textViewTitleList.setText("Рейтингові фільми");
+        binding = FragmentRatingMovieBinding.inflate(inflater, container, false);
 
-        movieAdapter = new MovieAdapter();
-        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
-        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
+        return binding.getRoot();
+    }
 
-//        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-//        movieViewModel.initMovie(movieRepository, false, 1);
-//        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-//            movies = movieResponse.getMovieList();
-//            System.out.println("movies.size() = " + movies.size());
-//            movieAdapter.setMovies(movies);
-//        });
+    @Override
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.movieList.recyclerViewMain.getLayoutManager();
-        binding.movieList.recyclerViewMain.addOnScrollListener(
-                new EndlessRecyclerOnScrollListener(layoutManager) {
-                    @Override
-                    public void onLoadMore(int current_page) {
-                        System.out.println("current_page = " + current_page);
-                        loadNext();
-                    }
-                });
-
-        movieAdapter.setOnPosterClickListener(this::onPosterClick);
-
-        return view;
+        viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        movieQuery = new MovieQuery(Constants.PARAMS.VALUE.SORT_BY_TOP_RATED, page);
+        initRecyclerView();
+        observeData();
+        addOnScrollListener();
+        viewModel.getMovies(movieQuery);
     }
 
     private void loadNext() {
-//        movieViewModel.initMovie(movieRepository, false, ++page);
-//        movieViewModel.getMovieData().observe(getViewLifecycleOwner(), movieResponse -> {
-//            movies = movieResponse.getMovieList();
-//            System.out.println("movies.size() = " + movies.size());
-//            movieAdapter.addMovies(movies);
-//        });
+        viewModel.getMovies(movieQuery);
+        viewModel.getMovieList().observe(getViewLifecycleOwner(),
+                movies -> movieAdapter.addMovies(movies)
+        );
     }
 
     public void onPosterClick(int position) {
@@ -93,5 +71,31 @@ public class RatingMovieFragment extends Fragment {
         String movieJsonString = JSONUtils.getGsonParser().toJson(movie);
         intent.putExtra("id", movieJsonString);
         startActivity(intent);
+    }
+
+    public void addOnScrollListener() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.movieList.recyclerViewMain.getLayoutManager();
+        binding.movieList.recyclerViewMain.addOnScrollListener(
+                new EndlessRecyclerOnScrollListener(layoutManager) {
+                    @Override
+                    public void onLoadMore(int current_page) {
+                        loadNext();
+                    }
+                }
+        );
+    }
+
+    private void observeData() {
+        viewModel.getMovieList().observe(getViewLifecycleOwner(),
+                movies -> movieAdapter.setMovies(movies)
+        );
+    }
+
+    private void initRecyclerView() {
+        movieAdapter = new MovieAdapter();
+        binding.movieList.textViewTitleList.setText("Рейтингові фільми");
+        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
+        movieAdapter.setOnPosterClickListener(this::onPosterClick);
     }
 }

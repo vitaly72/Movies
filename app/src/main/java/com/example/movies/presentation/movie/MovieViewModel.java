@@ -19,17 +19,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 @HiltViewModel
 public class MovieViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Movie>> movieList = new MutableLiveData<>();
-
     private final MovieRepository movieRepository;
+
     @Inject
     public MovieViewModel(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
-//        this.sortByPopular = sortByPopular;
-//        this.page = page;
-    }
-
-    public void nextPage(MovieQuery movieQuery) {
-//        movieData = movieRepository.getMovies(movieQuery);
     }
 
     public void getMovies(MovieQuery movieQuery) {

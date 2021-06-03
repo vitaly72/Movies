@@ -18,6 +18,7 @@ import com.example.movies.databinding.FragmentPopularMovieBinding;
 import com.example.movies.domain.models.Movie;
 import com.example.movies.domain.models.MovieQuery;
 import com.example.movies.presentation.details.DetailActivity;
+import com.example.movies.utils.Constants;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,6 @@ public class PopularMovieFragment extends Fragment {
     public MovieRepository movieRepository;
     private FragmentPopularMovieBinding binding;
 
-
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,20 +52,18 @@ public class PopularMovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        movieQuery = new MovieQuery(Constants.PARAMS.VALUE.SORT_BY_POPULARITY, page);
         initRecyclerView();
         observeData();
         addOnScrollListener();
+        viewModel.getMovies(movieQuery);
     }
 
     private void loadNext() {
-        System.out.println("PopularMovieFragment.loadNext");
-//        movieViewModel.initMovie(movieRepository, true, ++page);
-//        movieViewModel.nextPage();
-//        movieViewModel.getMovieData(true, page).observe(getViewLifecycleOwner(), movieResponse -> {
-//            movies = movieResponse.getMovieList();
-//            System.out.println("movies.size() = " + movies.size());
-//            movieAdapter.addMovies(movies);
-//        });
+        viewModel.getMovies(movieQuery);
+        viewModel.getMovieList().observe(getViewLifecycleOwner(),
+                movies -> movieAdapter.addMovies(movies)
+        );
     }
 
     public void addOnScrollListener() {

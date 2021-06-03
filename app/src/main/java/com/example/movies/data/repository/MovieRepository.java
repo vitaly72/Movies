@@ -18,12 +18,7 @@ public final class MovieRepository implements IMovieRepository {
     }
 
     public Observable<MovieResponse> getMovies(MovieQuery movieQuery) {
-        return movieApi.movie(movieQuery.getApiKey(),
-                movieQuery.getLanguage(),
-                movieQuery.getSortBy(),
-                movieQuery.getVoteCount(),
-                movieQuery.getPage()
-        );
+        return movieApi.movie(movieQuery);
     }
 
 //    public MutableLiveData<MovieResponse> getMovies(boolean sortByPopular, int page) {
