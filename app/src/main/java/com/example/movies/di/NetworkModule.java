@@ -18,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 @InstallIn(SingletonComponent.class)
 public class NetworkModule {
-
     @Provides
     @Singleton
     public static IMovieApi provideIMovieApi(OkHttpClient okHttpClient) {

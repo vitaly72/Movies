@@ -16,7 +16,7 @@ public interface IMovieApi {
     Observable<MovieResponse> movie(@QueryMap MovieQuery movieQuery);
 
     @GET("movie/{id}/videos")
-    Call<VideoResponse> video(@Path("id") int idMovie,
+    Observable<VideoResponse> video(@Path("id") int idMovie,
                               @Query("api_key") String apiKey,
                               @Query("language") String language);
 }

@@ -6,16 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.movies.R;
 import com.example.movies.databinding.FragmentFavoriteMovieBinding;
 import com.example.movies.domain.models.Movie;
 import com.example.movies.presentation.details.DetailActivity;
 import com.example.movies.presentation.movie.MovieAdapter;
+import com.example.movies.presentation.movie.base.IFragment;
 import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,37 +26,29 @@ import dagger.hilt.android.WithFragmentBindings;
 
 @WithFragmentBindings
 @AndroidEntryPoint
-public class FavoriteMovieFragment extends Fragment {
+public class FavoriteMovieFragment extends Fragment implements IFragment {
     private MovieAdapter movieAdapter;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private FavoriteMoviesViewModel viewModel;
+    private FragmentFavoriteMovieBinding binding;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentFavoriteMovieBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_favorite_movie,
-                container,
-                false);
-        View view = binding.getRoot();
-        binding.movieList.textViewTitleList.setText("Улюблені фільми");
+        binding = FragmentFavoriteMovieBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        FavoriteMoviesViewModel viewModel = ViewModelProviders.of(this)
-                .get(FavoriteMoviesViewModel.class);
-        movieAdapter = new MovieAdapter();
+    @Override
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(FavoriteMoviesViewModel.class);
+        initRecyclerView();
+        observeData();
+    }
 
-        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
-        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
-
-        viewModel.getFavouriteMovies().observe(getViewLifecycleOwner(), observer ->
-                movieAdapter.setMovies(observer));
-
-        movieAdapter.setOnPosterClickListener(this::onPosterClick);
-
-        return view;
+    @Override
+    public void loadNext() {
     }
 
     public void onPosterClick(int position) {
@@ -64,5 +57,25 @@ public class FavoriteMovieFragment extends Fragment {
         String movieJsonString = JSONUtils.getGsonParser().toJson(movie);
         intent.putExtra("id", movieJsonString);
         startActivity(intent);
+    }
+
+    @Override
+    public void addOnScrollListener() {
+    }
+
+    @Override
+    public void observeData() {
+        viewModel.getFavouriteMovies().observe(getViewLifecycleOwner(),
+                observer -> movieAdapter.setMovies(observer)
+        );
+    }
+
+    @Override
+    public void initRecyclerView() {
+        binding.movieList.textViewTitleList.setText("Улюблені фільми");
+        movieAdapter = new MovieAdapter();
+        binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
+        movieAdapter.setOnPosterClickListener(this::onPosterClick);
     }
 }

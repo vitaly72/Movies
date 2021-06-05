@@ -3,7 +3,7 @@ package com.example.movies.domain.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class VideoResponse {
     @SerializedName("id")
@@ -11,13 +11,13 @@ public class VideoResponse {
     private int id;
     @SerializedName("results")
     @Expose
-    private List<Video> videoList;
+    private ArrayList<Video> videoList;
 
-    public List<Video> getVideoList() {
+    public ArrayList<Video> getVideoList() {
         return videoList;
     }
 
-    public void setVideoList(List<Video> videoList) {
+    public void setVideoList(ArrayList<Video> videoList) {
         this.videoList = videoList;
     }
 

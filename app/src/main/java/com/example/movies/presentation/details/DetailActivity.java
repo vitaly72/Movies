@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -24,39 +25,49 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class DetailActivity extends AppCompatActivity {
     private Movie movie;
-    private ActivityDetailBinding detailBinding;
+    private ActivityDetailBinding binding;
     private FavoriteMoviesViewModel favoriteMoviesViewModel;
+    private VideoViewModel videoViewModel;
+    private VideoAdapter videoAdapter;
     private boolean isFavoriteMovie = false;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        detailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
-        Intent intent = getIntent();
-        movie = getMovieFromGson(intent);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+        movie = getMovieFromGson(getIntent());
+        binding.setMovie(movie);
 
-        VideoAdapter videoAdapter = new VideoAdapter();
-        detailBinding.recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
-        detailBinding.recyclerViewTrailers.setAdapter(videoAdapter);
+        favoriteMoviesViewModel = new ViewModelProvider(this).get(FavoriteMoviesViewModel.class);
+        videoViewModel = new ViewModelProvider(this).get(VideoViewModel.class);
 
-        favoriteMoviesViewModel = ViewModelProviders.of(this).get(FavoriteMoviesViewModel.class);
-
-        VideoViewModel viewModel = ViewModelProviders.of(this).get(VideoViewModel.class);
-        viewModel.initVideo(movie.getId());
-        viewModel.getVideoData().observe(this, videoResponse ->
-                videoAdapter.setVideos(videoResponse.getVideoList())
-        );
-
-        String urlImage = Constants.BASE.POSTER_URL + Constants.POSTER_SIZE.BIG + movie.getPosterPath();
-        Picasso.get().load(urlImage).into(detailBinding.imageViewBigPoster);
-        detailBinding.setMovie(movie);
+        initRecyclerView();
+        loadImage();
         setFavourite();
+        observeData();
+    }
 
-        videoAdapter.setOnVideoClickListener(url -> {
-            Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intentToTrailer);
-        });
+    public void loadImage() {
+        String urlImage = Constants.BASE.POSTER_URL + Constants.POSTER_SIZE.BIG + movie.getPosterPath();
+        Picasso.get().load(urlImage).into(binding.imageViewBigPoster);
+    }
+
+    public void observeData() {
+        videoViewModel.getVideos(movie.getId());
+        videoViewModel.getVideoList().observe(this, videoAdapter::setVideos);
+    }
+
+    public void initRecyclerView() {
+        videoAdapter = new VideoAdapter();
+        binding.recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewTrailers.setAdapter(videoAdapter);
+        videoAdapter.setOnVideoClickListener(this::onVideoClickListener);
+    }
+
+    public void onVideoClickListener(String url) {
+        Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intentToTrailer);
     }
 
     public Movie getMovieFromGson(Intent intent) {
@@ -78,10 +89,10 @@ public class DetailActivity extends AppCompatActivity {
         Movie favouriteMovie = favoriteMoviesViewModel.getFavouriteMovieByID(movie.getId());
         if (favouriteMovie == null) {
             isFavoriteMovie = false;
-            detailBinding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_gray_24);
+            binding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_gray_24);
         } else {
             isFavoriteMovie = true;
-            detailBinding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_yellow_24);
+            binding.imageViewAddToFavourite.setImageResource(R.drawable.ic_baseline_star_rate_yellow_24);
         }
     }
 }

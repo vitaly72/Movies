@@ -1,9 +1,9 @@
 package com.example.movies.domain.repository;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.movies.domain.models.VideoResponse;
 
+import io.reactivex.rxjava3.core.Observable;
+
 public interface IVideoRepository {
-    MutableLiveData<VideoResponse> getVideo(int idMovie);
+    Observable<VideoResponse> getVideo(int idMovie);
 }
