@@ -1,6 +1,5 @@
 package com.example.movies.presentation.movie;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentRatingMovieBinding;
-import com.example.movies.domain.models.Movie;
 import com.example.movies.domain.models.MovieQuery;
-import com.example.movies.presentation.details.DetailActivity;
+import com.example.movies.presentation.movie.base.BaseFragment;
+import com.example.movies.presentation.movie.base.IFragment;
 import com.example.movies.utils.Constants;
-import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,13 +24,12 @@ import dagger.hilt.android.WithFragmentBindings;
 
 @WithFragmentBindings
 @AndroidEntryPoint
-public class RatingMovieFragment extends Fragment {
+public class RatingMovieFragment extends BaseFragment implements IFragment {
     private MovieAdapter movieAdapter;
-    private int page = 1;
-    public MovieRepository movieRepository;
     private FragmentRatingMovieBinding binding;
     private MovieViewModel viewModel;
     private MovieQuery movieQuery;
+    private int page = 1;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater,
@@ -58,21 +53,26 @@ public class RatingMovieFragment extends Fragment {
         viewModel.getMovies(movieQuery);
     }
 
-    private void loadNext() {
+    @Override
+    public void loadNext() {
+        movieQuery.nextPage(++page);
         viewModel.getMovies(movieQuery);
         viewModel.getMovieList().observe(getViewLifecycleOwner(),
                 movies -> movieAdapter.addMovies(movies)
         );
     }
 
+    @Override
     public void onPosterClick(int position) {
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        Movie movie = movieAdapter.getMovies().get(position);
-        String movieJsonString = JSONUtils.getGsonParser().toJson(movie);
-        intent.putExtra("id", movieJsonString);
-        startActivity(intent);
+        onPosterClick(movieAdapter, position);
     }
 
+    @Override
+    public void onPosterClick(MovieAdapter movieAdapter, int position) {
+        super.onPosterClick(movieAdapter, position);
+    }
+
+    @Override
     public void addOnScrollListener() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) binding.movieList.recyclerViewMain.getLayoutManager();
         binding.movieList.recyclerViewMain.addOnScrollListener(
@@ -85,13 +85,15 @@ public class RatingMovieFragment extends Fragment {
         );
     }
 
-    private void observeData() {
+    @Override
+    public void observeData() {
         viewModel.getMovieList().observe(getViewLifecycleOwner(),
                 movies -> movieAdapter.setMovies(movies)
         );
     }
 
-    private void initRecyclerView() {
+    @Override
+    public void initRecyclerView() {
         movieAdapter = new MovieAdapter();
         binding.movieList.textViewTitleList.setText("Рейтингові фільми");
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));

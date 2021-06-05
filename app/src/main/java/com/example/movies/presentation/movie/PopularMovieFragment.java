@@ -1,6 +1,5 @@
 package com.example.movies.presentation.movie;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,36 +7,29 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.movies.data.repository.MovieRepository;
 import com.example.movies.databinding.FragmentPopularMovieBinding;
-import com.example.movies.domain.models.Movie;
 import com.example.movies.domain.models.MovieQuery;
-import com.example.movies.presentation.details.DetailActivity;
+import com.example.movies.presentation.movie.base.BaseFragment;
+import com.example.movies.presentation.movie.base.IFragment;
 import com.example.movies.utils.Constants;
-import com.example.movies.utils.JSONUtils;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import dagger.hilt.android.WithFragmentBindings;
 
 @WithFragmentBindings
 @AndroidEntryPoint
-public class PopularMovieFragment extends Fragment {
+public class PopularMovieFragment extends BaseFragment implements IFragment {
     private MovieAdapter movieAdapter;
-    private List<Movie> movies;
-    private int page = 1;
     private MovieQuery movieQuery;
     private MovieViewModel viewModel;
-    public MovieRepository movieRepository;
     private FragmentPopularMovieBinding binding;
+    private int page = 1;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -59,11 +51,17 @@ public class PopularMovieFragment extends Fragment {
         viewModel.getMovies(movieQuery);
     }
 
-    private void loadNext() {
+    public void loadNext() {
+        movieQuery.nextPage(++page);
         viewModel.getMovies(movieQuery);
         viewModel.getMovieList().observe(getViewLifecycleOwner(),
                 movies -> movieAdapter.addMovies(movies)
         );
+    }
+
+    @Override
+    public void onPosterClick(int position) {
+        onPosterClick(movieAdapter, position);
     }
 
     public void addOnScrollListener() {
@@ -72,40 +70,30 @@ public class PopularMovieFragment extends Fragment {
                 new EndlessRecyclerOnScrollListener(layoutManager) {
                     @Override
                     public void onLoadMore(int current_page) {
-                        System.out.println("current_page = " + current_page);
                         loadNext();
                     }
-                });
+                }
+        );
     }
 
-    public void onPosterClick(int position) {
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        Movie movie = movieAdapter.getMovies().get(position);
-        String movieJsonString = JSONUtils.getGsonParser().toJson(movie);
-        System.out.println("movieJsonString = " + movieJsonString);
-        intent.putExtra("id", movieJsonString);
-        startActivity(intent);
+    @Override
+    public void onPosterClick(MovieAdapter movieAdapter, int position) {
+        super.onPosterClick(movieAdapter, position);
     }
 
-    private void observeData() {
+    @Override
+    public void observeData() {
         viewModel.getMovieList().observe(getViewLifecycleOwner(),
                 movies -> movieAdapter.setMovies(movies)
         );
     }
 
-    private void initRecyclerView() {
+    @Override
+    public void initRecyclerView() {
         movieAdapter = new MovieAdapter();
         binding.movieList.textViewTitleList.setText("Популярні фільми");
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
         movieAdapter.setOnPosterClickListener(this::onPosterClick);
-    }
-
-    private int getColumnCount() {
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
-//        return Math.max(width / 260, 2);
-        return 0;
     }
 }
