@@ -72,7 +72,7 @@ public class FavoriteMovieFragment extends Fragment implements IFragment {
 
     @Override
     public void initRecyclerView() {
-        binding.movieList.textViewTitleList.setText("Улюблені фільми");
+//        binding.movieList.textViewTitleList.setText("Улюблені фільми");
         movieAdapter = new MovieAdapter();
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);

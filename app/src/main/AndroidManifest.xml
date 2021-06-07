@@ -16,7 +16,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m"
         tools:ignore="AllowBackup">
-        <activity android:name=".presentation.movie.favorite.FavoriteActivity" />
         <activity android:name=".presentation.details.DetailActivity" />
         <activity android:name=".presentation.movie.MainActivity">
             <intent-filter>

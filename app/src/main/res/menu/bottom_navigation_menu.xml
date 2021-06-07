@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/popular"
+        android:id="@+id/popularMovieFragment"
         android:enabled="true"
         android:icon="@drawable/ic_popular"
         android:title=""/>
     <item
-        android:id="@+id/rating"
+        android:id="@+id/ratingMovieFragment"
         android:enabled="true"
         android:icon="@drawable/ic_rating"
         android:title=""/>
     <item
-        android:id="@+id/favorite"
+        android:id="@+id/favoriteMovieFragment"
         android:enabled="true"
         android:icon="@drawable/ic_favorite"
         android:title=""/>

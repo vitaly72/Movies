@@ -9,10 +9,10 @@
     <string name="item_favourite">Избраное</string>
     <string name="launch_trailer">Запустить трейлер</string>
     <string name="name">Назва:</string>
-    <string name="original_name">Оригінальна назва</string>
-    <string name="rating">Рейтинг:</string>
-    <string name="date">Дата релізу:</string>
-    <string name="overview">Опис:</string>
+    <string name="original_name">Title: </string>
+    <string name="rating">Rating:</string>
+    <string name="date">Date release:</string>
+    <string name="overview">Description:</string>
     <string name="menu_1">Popular</string>
     <string name="menu_2">Rating</string>
     <string name="menu_3">Favorite</string>
