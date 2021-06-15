@@ -15,7 +15,9 @@ local.properties
 
 # User-specific configurations
 .idea/libraries/
+.idea/inspectionProfiles/
 .idea/workspace.xml
+.idea/jarRepositories.xml
 .idea/tasks.xml
 .idea/.name
 .idea/compiler.xml
