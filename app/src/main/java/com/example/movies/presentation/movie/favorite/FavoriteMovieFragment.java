@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.movies.R;
 import com.example.movies.databinding.FragmentFavoriteMovieBinding;
 import com.example.movies.domain.models.Movie;
 import com.example.movies.presentation.details.DetailActivity;
@@ -72,7 +73,7 @@ public class FavoriteMovieFragment extends Fragment implements IFragment {
 
     @Override
     public void initRecyclerView() {
-//        binding.movieList.textViewTitleList.setText("Улюблені фільми");
+        binding.movieList.textViewTitleList.setText(getResources().getString(R.string.favorite));
         movieAdapter = new MovieAdapter();
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);

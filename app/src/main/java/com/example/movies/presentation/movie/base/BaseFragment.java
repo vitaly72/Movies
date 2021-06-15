@@ -3,8 +3,11 @@ package com.example.movies.presentation.movie.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.DisplayMetrics;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movies.domain.models.Movie;
 import com.example.movies.presentation.details.DetailActivity;
@@ -26,5 +29,14 @@ public class BaseFragment extends Fragment {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = (int) (displayMetrics.widthPixels / displayMetrics.density);
         return Math.max(width / 260, 2);
+    }
+
+    public MovieAdapter initRecyclerViews(TextView textView, RecyclerView recyclerView) {
+        MovieAdapter movieAdapter = new MovieAdapter();
+        textView.setText("Популярні фільми");
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setAdapter(movieAdapter);
+
+        return movieAdapter;
     }
 }

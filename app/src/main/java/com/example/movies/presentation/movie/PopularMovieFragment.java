@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.movies.R;
 import com.example.movies.databinding.FragmentPopularMovieBinding;
 import com.example.movies.domain.models.MovieQuery;
 import com.example.movies.presentation.movie.base.BaseFragment;
@@ -91,7 +92,7 @@ public class PopularMovieFragment extends BaseFragment implements IFragment {
     @Override
     public void initRecyclerView() {
         movieAdapter = new MovieAdapter();
-        binding.movieList.textViewTitleList.setText("Популярні фільми");
+        binding.movieList.textViewTitleList.setText(getResources().getString(R.string.most_popularity));
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
         movieAdapter.setOnPosterClickListener(this::onPosterClick);

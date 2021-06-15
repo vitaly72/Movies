@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.movies.R;
 import com.example.movies.databinding.FragmentRatingMovieBinding;
 import com.example.movies.domain.models.MovieQuery;
 import com.example.movies.presentation.movie.base.BaseFragment;
@@ -95,7 +96,7 @@ public class RatingMovieFragment extends BaseFragment implements IFragment {
     @Override
     public void initRecyclerView() {
         movieAdapter = new MovieAdapter();
-        binding.movieList.textViewTitleList.setText("Рейтингові фільми");
+        binding.movieList.textViewTitleList.setText(getResources().getString(R.string.top_rated));
         binding.movieList.recyclerViewMain.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.movieList.recyclerViewMain.setAdapter(movieAdapter);
         movieAdapter.setOnPosterClickListener(this::onPosterClick);

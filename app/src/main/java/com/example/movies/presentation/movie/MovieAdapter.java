@@ -28,14 +28,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return new MovieViewHolder(view);
     }
 
-    public interface OnPosterClickListener {
-        void onPosterClick(int position);
-    }
-
-    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
-        this.onPosterClickListener = onPosterClickListener;
-    }
-
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         String url = Constants.BASE.POSTER_URL
@@ -51,6 +43,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
+
         private final ImageView imageViewSmallPoster;
         private final TextView textViewTitle;
 
@@ -65,6 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 }
             });
         }
+
     }
 
     public void setMovies(List<Movie> movies) {
@@ -75,14 +69,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void addMovies(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();
+        for(Movie movie : this.movies) {
+            System.out.println("movie.getTitle() = " + movie.getTitle());
+        }
+    }
+
+    public void clear() {
+        this.movies.clear();
+        notifyDataSetChanged();
     }
 
     public List<Movie> getMovies() {
         return movies;
     }
 
-    public void clear() {
-        this.movies.clear();
-        notifyDataSetChanged();
+    public interface OnPosterClickListener {
+        void onPosterClick(int position);
+    }
+
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+        this.onPosterClickListener = onPosterClickListener;
     }
 }
