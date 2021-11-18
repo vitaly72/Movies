@@ -1,39 +1,144 @@
-# Built application files
-/*/build/
+######################
+# Project Specific
+######################
+/target/www/**
+/src/test/javascript/coverage/
 
-# Crashlytics configuations
-com_crashlytics_export_strings.xml
+######################
+# Node
+######################
+/node/
+node_tmp/
+node_modules/
+npm-debug.log.*
+/.awcache/*
+/.cache-loader/*
 
-# Local configuration file (sdk path, etc)
+######################
+# SASS
+######################
+.sass-cache/
+
+######################
+# Eclipse
+######################
+*.pydevproject
+.project
+.metadata
+tmp/
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
 local.properties
+.classpath
+.settings/
+.loadpath
+.factorypath
+/src/main/resources/rebel.xml
 
-# Gradle generated files
-.gradle/
+# External tool builders
+.externalToolBuilders/**
 
-# Signing files
-.signing/
+# Locally stored "Eclipse launch configurations"
+*.launch
 
-# User-specific configurations
-.idea/libraries/
-.idea/inspectionProfiles/
-.idea/workspace.xml
-.idea/jarRepositories.xml
-.idea/tasks.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+######################
+# Intellij
+######################
+.idea/
 *.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+classes/
+out/
 
-# OS-specific files
+######################
+# Visual Studio Code
+######################
+.vscode/
+
+######################
+# Maven
+######################
+/log/
+/target/
+
+######################
+# Gradle
+######################
+.gradle/
+/build/
+
+######################
+# Package Files
+######################
+*.jar
+*.war
+*.ear
+*.db
+
+######################
+# Windows
+######################
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+######################
+# Mac OSX
+######################
 .DS_Store
-.DS_Store?
+.svn
+
+# Thumbnails
 ._*
+
+# Files that might appear on external disk
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
+
+######################
+# Directories
+######################
+/bin/
+/deploy/
+
+######################
+# Logs
+######################
+*.log*
+
+######################
+# Others
+######################
+*.class
+*.*~
+*~
+.merge_file*
+
+######################
+# Gradle Wrapper
+######################
+!gradle/wrapper/gradle-wrapper.jar
+
+######################
+# Maven Wrapper
+######################
+!.mvn/wrapper/maven-wrapper.jar
+
+######################
+# ESLint
+######################
+.eslintcache
